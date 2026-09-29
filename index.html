@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>인사랑 초과근무 기록관리 제도개선 실무 대응 가이드</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Noto Sans KR -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-blue-600 selection:text-white">
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs transition">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 text-white font-black text-sm shadow-md">
+          인
+        </span>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-bold tracking-wider text-blue-600 uppercase">인사랑 복무 전산 개편</span>
+            <span class="inline-flex items-center bg-blue-50 text-blue-800 border border-blue-200 text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+              만든이: 광진구 청소과 신기록
+            </span>
+          </div>
+          <h1 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">초과근무 실무 대응 가이드 & 시뮬레이터</h1>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="openSimulator('office', 'custom')" class="inline-flex items-center text-xs sm:text-sm font-bold px-3 py-1.5 rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white transition shadow-sm active:scale-95">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+          </svg>
+          <span>커스텀 시뮬레이터</span>
+        </button>
+        <button onclick="openCoreRulesModal()" class="inline-flex items-center text-xs sm:text-sm font-bold px-2.5 sm:px-3 py-1.5 rounded-lg border border-amber-300 bg-amber-50 hover:bg-amber-100 text-amber-900 transition shadow-xs active:scale-95">
+          <span class="w-4 h-4 rounded-full bg-amber-500 text-white text-[11px] flex items-center justify-center mr-1 font-black">7</span>
+          <span>핵심 7대 원칙</span>
+        </button>
+        <button onclick="shareLink()" class="hidden sm:inline-flex items-center text-xs sm:text-sm font-medium px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 transition shadow-xs active:scale-95">
+          <svg class="w-4 h-4 mr-1 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+          <span id="copyBtnText">링크 복사</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex-grow space-y-6">
+    
+    <!-- Hero Banner -->
+    <div class="bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 rounded-2xl text-white p-6 sm:p-8 shadow-lg relative overflow-hidden">
+      <div class="relative z-10 max-w-3xl">
+        <div class="inline-flex items-center gap-1.5 bg-blue-500/30 text-blue-100 border border-blue-400/30 px-3 py-1 rounded-full text-xs font-semibold mb-3">
+          <span>📅 10월 1일 전면 시행</span>
+          <span>•</span>
+          <span>전 자치단체 인사랑 전산 일괄 필수 적용</span>
+        </div>
+        <h2 class="text-xl sm:text-3xl font-black tracking-tight leading-snug">
+          초과근무 기록관리 제도개선<br class="hidden sm:inline"> 실무 대응 가이드 & 인터랙티브 시뮬레이터
+        </h2>
+        <p class="mt-2 text-xs sm:text-sm text-blue-100 leading-relaxed">
+          1일 4시간 상한 폐지, 1시간 단위 실시간 확인, 기본공제(1시간)와 식사 제외시간의 상관관계, 급량비 지급 요건(09시 전 1시간 / 18시 후 1시간)까지 실무에 필요한 모든 핵심 규칙을 안내합니다.
+        </p>
+        
+        <div class="mt-5 flex flex-wrap gap-2.5">
+          <button onclick="openSimulator('office', 'custom')" class="bg-white text-blue-900 hover:bg-blue-50 font-bold px-4 py-2 rounded-xl text-xs sm:text-sm transition shadow-md active:scale-95 flex items-center gap-1.5">
+            <span>⚙️</span> 비현업 커스텀 시뮬레이션
+          </button>
+          <button onclick="openSimulator('field', 'custom')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2 rounded-xl text-xs sm:text-sm transition shadow-md active:scale-95 flex items-center gap-1.5">
+            <span>🛠️</span> 현업 커스텀 시뮬레이션
+          </button>
+          <button onclick="openCoreRulesModal()" class="bg-amber-500/30 hover:bg-amber-500/40 text-amber-200 border border-amber-300/40 font-bold px-3.5 py-2 rounded-xl text-xs sm:text-sm transition flex items-center gap-1.5">
+            <span>📜</span> 실무 핵심 7대 원칙
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 Core Principles Card Summary -->
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-blue-600 text-white text-xs flex items-center justify-center font-bold">★</span>
+          <h3 class="font-bold text-slate-900 text-sm sm:text-base">한눈에 보는 비현업·현업 실무 핵심 7대 원칙</h3>
+        </div>
+        <button onclick="openCoreRulesModal()" class="text-xs text-blue-600 font-bold hover:underline">상세 보기 ➔</button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 text-xs text-slate-700">
+        <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
+          <strong class="text-blue-700 block mb-0.5">1. 사전초과 시간 현실화</strong>
+          실제 일할 시간만 신청. 길게 신청 후 조기 퇴근 시 미근무 사유 일일이 소명 필요.
+        </div>
+        <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
+          <strong class="text-blue-700 block mb-0.5">2. 기본공제 1시간 내 식사</strong>
+          평일 비현업은 1시간이 자동 공제되므로, 1시간 이내 식사는 제외시간 등록 불필요!
+        </div>
+        <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
+          <strong class="text-rose-700 block mb-0.5">3. 1시간 초과 식사·용무는 제외</strong>
+          식사가 1시간을 초과하거나 개인용무/외출은 반드시 '근무제외시간' 등록 필수.
+        </div>
+        <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
+          <strong class="text-blue-700 block mb-0.5">4. 매시간 실시간 [확인] 클릭</strong>
+          09~18시 외 초과 시간대마다 PC 확인 (매시 30~40분 알림 팝업 제공).
+        </div>
+        <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
+          <strong class="text-blue-700 block mb-0.5">5. 익일 이후 본인 건별 상신</strong>
+          당일 상신 불가. 미기록 사유와 제외시간 확인 후 본인이 과장님께 건별 기안.
+        </div>
+        <div class="p-2.5 rounded-lg bg-emerald-700/10 border border-emerald-300">
+          <strong class="text-emerald-800 block mb-0.5">6. 1일 4시간 상한 폐지</strong>
+          06:00~24:00 초과 가능 (비현업 월 50시간 상한 유지 / 현업 공제 없음).
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Filter Controls -->
+    <div class="bg-slate-200/80 p-1.5 rounded-xl flex items-center max-w-md mx-auto shadow-inner">
+      <button id="tabBtnAll" onclick="filterRole('all')" class="w-1/3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all shadow-xs bg-white text-slate-900">
+        전체 보기
+      </button>
+      <button id="tabBtnOffice" onclick="filterRole('office')" class="w-1/3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900">
+        🏢 비현업 공무원
+      </button>
+      <button id="tabBtnField" onclick="filterRole('field')" class="w-1/3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900">
+        🛠️ 현업 공무원
+      </button>
+    </div>
+
+    <!-- Absolute Rule Warning Banner -->
+    <div class="bg-rose-50 border-l-4 border-rose-600 p-4 rounded-r-xl shadow-xs">
+      <div class="flex items-start gap-3">
+        <span class="text-rose-600 text-xl font-black">🚨</span>
+        <div class="text-xs sm:text-sm text-rose-950">
+          <strong class="font-bold text-rose-900 block text-sm mb-0.5">절대 불변 원칙: 퇴근 시 출퇴근 단말기 지문 인식 필수!</strong>
+          인사랑 PC에서 1시간마다 확인을 완벽히 눌렀더라도, <strong>실제 퇴근 시각에 지문 인식을 하지 않으면 초과근무 수당이 전액 불인정</strong>됩니다. 지문 인식 시각과 사전신청 시각 중 빠른 시각이 시간 인정의 최종 커트라인이 됩니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Office Workers (비현업 공무원) -->
+    <section id="sectionOffice" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3.5">
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-base">🏢</span>
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900">비현업 공무원 (일반 사무직) 업무 절차</h3>
+            <p class="text-xs text-slate-500">실시간 매시간 PC 확인 및 익일 개인별 확인결재 상신</p>
+          </div>
+        </div>
+        <button onclick="openSimulator('office', 'custom')" class="text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-lg transition flex items-center gap-1 shadow-xs">
+          <span>⚙️ 커스텀 시뮬레이터</span>
+        </button>
+      </div>
+
+      <!-- 4 Step Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-2">
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-xs font-black text-blue-600">STEP 1</span>
+              <span class="text-[11px] text-amber-600 font-bold">원칙 1</span>
+            </div>
+            <h4 class="font-bold text-slate-800 text-xs sm:text-sm mb-1">사전초과 신청</h4>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              기존처럼 사전명령 신청. <strong>반드시 실제 근무할 시간만큼만 신청</strong>하십시오. 길게 신청 후 조기 퇴근 시 남은 시간을 일일이 소명해야 합니다.
+            </p>
+          </div>
+          <div class="mt-2 pt-2 border-t border-slate-200 text-[10px] text-slate-500">
+            * 1일 4시간 상한 폐지, 월 50시간 유지
+          </div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-xs font-black text-blue-600">STEP 2</span>
+              <span class="text-[11px] text-slate-400 font-medium">1시간 단위</span>
+            </div>
+            <h4 class="font-bold text-slate-800 text-xs sm:text-sm mb-1">매시간 PC [확인]</h4>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              기본근무 외 매시간 30~40분경 알림 팝업 제공. 팝업이 안 떠도 해당 시간대(예: 18:01~18:59) 내에 메인화면 <strong>[근무기록]</strong>에서 자율 클릭 가능.
+            </p>
+          </div>
+          <div class="mt-2 pt-2 border-t border-slate-200 text-[10px] text-slate-500">
+            * 브라우저 팝업 차단 해제 필수
+          </div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-xs font-black text-red-600">STEP 3</span>
+              <span class="text-[11px] text-red-600 font-bold">절대 필수</span>
+            </div>
+            <h4 class="font-bold text-slate-800 text-xs sm:text-sm mb-1">퇴근 지문 인식</h4>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              실제 퇴근 시각에 지문인식 단말기에 정확히 태그. PC 확인을 모두 마쳤더라도 <strong>지문 기록이 없으면 수당 산정 불가</strong>.
+            </p>
+          </div>
+          <div class="mt-2 pt-2 border-t border-slate-200 text-[10px] text-red-600 font-semibold">
+            * 지문 시각이 최종 상한선
+          </div>
+        </div>
+
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-xs font-black text-blue-600">STEP 4</span>
+              <span class="text-[11px] text-blue-600 font-bold">익일 이후</span>
+            </div>
+            <h4 class="font-bold text-slate-800 text-xs sm:text-sm mb-1">사후 개별 상신</h4>
+            <p class="text-[11px] text-slate-600 leading-relaxed">
+              익일 이후 인사랑 접속 ➔ 미기록 사유(식사, 이석)와 제외시간 확인 ➔ <strong>근무자 본인이 과장님께 건별 확인결재 상신</strong>.
+            </p>
+          </div>
+          <div class="mt-2 pt-2 border-t border-slate-200 text-[10px] text-slate-500">
+            * 서무 일괄 상신 불가 (본인 상신)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: Field Workers (현업 공무원) -->
+    <section id="sectionField" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 pb-3.5">
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-base">🛠️</span>
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900">현업 공무원 (현장·교대·운행직) 업무 절차</h3>
+            <p class="text-xs text-slate-500">행정지원과 방침: 현업은 실시간 PC 입력 대상 제외 원칙</p>
+          </div>
+        </div>
+        <button onclick="openSimulator('field', 'custom')" class="text-xs font-bold text-emerald-700 hover:text-emerald-900 bg-emerald-50 border border-emerald-300 px-3 py-1.5 rounded-lg transition flex items-center gap-1 shadow-xs">
+          <span>⚙️ 커스텀 시뮬레이터</span>
+        </button>
+      </div>
+
+      <!-- Case Comparison Columns -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Case A: Normal System Separation -->
+        <div class="rounded-xl border-2 border-emerald-500 bg-emerald-50/20 p-4 relative flex flex-col justify-between">
+          <div class="absolute -top-3 left-4 bg-emerald-600 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-xs">
+            Case A. 시스템 분리가 정상 반영된 경우
+          </div>
+          <div class="mt-2">
+            <h4 class="text-sm sm:text-base font-bold text-slate-900 mb-1.5">기존 방식 그대로 유지 (가장 이상적)</h4>
+            <p class="text-xs text-slate-600 mb-3 leading-relaxed">
+              인사랑 시스템에서 현업 대상자로 정상 인식되어 매시간 알림이나 입력창이 뜨지 않는 정상 상태입니다.
+            </p>
+            <ul class="text-xs text-slate-800 space-y-2 border-t border-emerald-200/60 pt-2.5">
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-600 font-bold">✓</span>
+                <span><strong>출퇴근 지문 인식:</strong> 평소대로 단말기에 정확히 태그</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-600 font-bold">✓</span>
+                <span><strong>PC 입력 면제:</strong> 1시간마다 인사랑 누를 필요 없음</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-600 font-bold">✓</span>
+                <span><strong>증빙 관리:</strong> 기존처럼 현안업무처리 진행</span>
+              </li>
+            </ul>
+          </div>
+          <div class="mt-3 pt-2.5 border-t border-emerald-200 text-[11px] font-semibold text-emerald-800">
+            👉 평소 일하시던 업무 루틴 그대로 유지하시면 됩니다.
+          </div>
+        </div>
+
+        <!-- Case B: Transition System Error -->
+        <div class="rounded-xl border-2 border-amber-500 bg-amber-50/20 p-4 relative flex flex-col justify-between">
+          <div class="absolute -top-3 left-4 bg-amber-600 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-xs">
+            Case B. 시스템 미분리로 누락/팝업 오류 발생 시
+          </div>
+          <div class="mt-2">
+            <h4 class="text-sm sm:text-base font-bold text-slate-900 mb-1.5">퇴근 지문 + 익일 사유 일괄 기입 후 상신</h4>
+            <p class="text-xs text-slate-600 mb-3 leading-relaxed">
+              제도 초기 전산 미반영으로 현업임에도 '미기록' 경고가 뜨거나 결재 요구가 발생하는 과도기 대응법입니다.
+            </p>
+            <ol class="text-xs text-slate-800 space-y-2 border-t border-amber-200/60 pt-2.5 list-decimal list-inside">
+              <li><strong>당일 현장 근무:</strong> PC 입력에 신경 쓰지 말고 현장 업무 수행 (퇴근 지문은 필수!)</li>
+              <li><strong>익일 인사랑 접속:</strong> 초과근무 확인 신청 메뉴 접속</li>
+              <li><strong>[근무기록조회] 클릭:</strong> 어제 근무했던 시간대에 미기록 사유 일괄 작성<br>
+                <em class="text-[11px] text-amber-900 bg-amber-100 px-1.5 py-0.5 rounded inline-block mt-0.5 font-bold">예: "현업 현장업무 처리"</em>
+              </li>
+              <li><strong>개인별 상신:</strong> 본인이 과장님께 건별 확인결재 기안 상신</li>
+            </ol>
+          </div>
+          <div class="mt-3 pt-2.5 border-t border-amber-200 text-[11px] font-semibold text-amber-800">
+            👉 지문만 확실히 찍혀 있으면 익일에 사유 적어 얼마든지 승인 가능합니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Summary Matrix -->
+      <div class="overflow-x-auto rounded-xl border border-slate-200 mt-2">
+        <table class="w-full text-xs text-left">
+          <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+            <tr>
+              <th class="p-2.5">구분</th>
+              <th class="p-2.5">사전 신청</th>
+              <th class="p-2.5">근무 중 (실시간)</th>
+              <th class="p-2.5">퇴근 시</th>
+              <th class="p-2.5">사후 처리 (익일~)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700">
+            <tr class="hover:bg-slate-50">
+              <td class="p-2.5 font-bold text-blue-700 bg-blue-50/40">🏢 비현업 (사무직)</td>
+              <td class="p-2.5">실제 근무시간만 신청</td>
+              <td class="p-2.5 font-semibold text-blue-600">매시간 PC [확인] 클릭</td>
+              <td class="p-2.5 font-bold text-red-600">지문인식 (필수)</td>
+              <td class="p-2.5">미기록사유+제외시간 등록 후 본인 건별 상신</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-2.5 font-bold text-emerald-700 bg-emerald-50/40">🛠️ 현업 (정상반영)</td>
+              <td class="p-2.5">근무명령표(시프트)</td>
+              <td class="p-2.5 text-slate-500">PC 입력 불필요</td>
+              <td class="p-2.5 font-bold text-red-600">지문인식 (필수)</td>
+              <td class="p-2.5 font-semibold text-emerald-800">기존 근무</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-2.5 font-bold text-amber-700 bg-amber-50/40">🛠️ 현업 (과도기오류)</td>
+              <td class="p-2.5">근무명령표 / 신청</td>
+              <td class="p-2.5 text-slate-500">PC 입력 불가(무시)</td>
+              <td class="p-2.5 font-bold text-red-600">지문인식 (필수)</td>
+              <td class="p-2.5 text-amber-900 font-medium">익일 '현업 현장업무 처리' 적고 본인 건별 상신</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION: FAQ Accordion (Based on Official Q&A) -->
+    <section id="faq" class="bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs space-y-3">
+      <div class="border-b border-slate-200 pb-3">
+        <h3 class="text-base sm:text-lg font-bold text-slate-900">행정지원과 공식 질의응답 (FAQ)</h3>
+        <p class="text-xs text-slate-500">2026.09.29 기준 공식 답변 반영 실무 Q&A</p>
+      </div>
+
+      <div class="space-y-2.5 pt-1 text-xs sm:text-sm">
+        <!-- Q1 -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <button onclick="toggleFaq('faq1')" class="w-full p-3.5 text-left font-bold text-slate-800 bg-slate-50/70 hover:bg-slate-100 flex items-center justify-between transition">
+            <span>Q1. 저녁 식사를 하고 왔을 때 근무제외시간에 반드시 입력해야 하나요?</span>
+            <span id="faq1-icon" class="text-slate-400 transition-transform">▼</span>
+          </button>
+          <div id="faq1" class="hidden p-3.5 bg-white border-t border-slate-200 text-slate-600 text-xs leading-relaxed space-y-1.5">
+            <p><strong>A. 1시간 이내 식사라면 등록하지 않아도 됩니다. 단, 1시간을 초과하면 초과분을 반드시 등록해야 합니다.</strong></p>
+            <p>평일 비현업 공무원은 1일 초과근무 시 지방공무원 보수규정에 따라 <strong>기본 1시간(60분)이 자동으로 공제</strong>됩니다. 따라서 18:00~19:00 사이에 1시간 동안 식사를 하고 온 경우, 어차피 기본공제 1시간으로 차감되므로 '근무제외시간'에 별도로 등록할 필요가 없습니다. (단, 해당 시간대 미기록 사유에는 '식사'라고 입력해야 합니다.)</p>
+            <p class="text-amber-800 bg-amber-50 p-2 rounded">
+              ⚠️ <strong>주의:</strong> 만약 식사를 1시간 30분 동안 했다면, 기본공제 1시간을 초과하는 <strong>30분은 반드시 '근무제외시간'에 등록</strong>해야 감사 지적이나 결재 반려를 피할 수 있습니다.
+            </p>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <button onclick="toggleFaq('faq2')" class="w-full p-3.5 text-left font-bold text-slate-800 bg-slate-50/70 hover:bg-slate-100 flex items-center justify-between transition">
+            <span>Q2. 급량비(식비 지원)는 어떤 기준으로 지급되나요? 2시간 이상 근무해야 하나요?</span>
+            <span id="faq2-icon" class="text-slate-400 transition-transform">▼</span>
+          </button>
+          <div id="faq2" class="hidden p-3.5 bg-white border-t border-slate-200 text-slate-600 text-xs leading-relaxed space-y-1">
+            <p><strong>A. 1시간 이상 근무 시 지급됩니다. 2시간이 아닙니다.</strong></p>
+            <ul class="list-disc list-inside space-y-1">
+              <li><strong>조식 (1식):</strong> 출근 시간 기준 <strong>오전 09:00 이전 1시간 이상</strong> 초과근무를 수행한 경우 지급</li>
+              <li><strong>석식 (1식):</strong> 퇴근 시간 기준 <strong>18:00 이후 1시간 이상</strong> 초과근무를 수행한 경우 지급 (기본 1시간 공제 후 실근무 기준)</li>
+              <li><strong>휴일 급량비:</strong> 휴일 근무 시 1일 1시간 이상 초과근무 시 중식 지급 요건 충족</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <button onclick="toggleFaq('faq3')" class="w-full p-3.5 text-left font-bold text-slate-800 bg-slate-50/70 hover:bg-slate-100 flex items-center justify-between transition">
+            <span>Q3. 1일 초과근무 상한이 정말 폐지되었나요? 몇 시까지 할 수 있나요?</span>
+            <span id="faq3-icon" class="text-slate-400 transition-transform">▼</span>
+          </button>
+          <div id="faq3" class="hidden p-3.5 bg-white border-t border-slate-200 text-slate-600 text-xs leading-relaxed">
+            <strong>A. 네, 1일 4시간 상한이 공식 폐지되었습니다.</strong><br>
+            초과근무 가능 시간대는 <strong>06:00부터 24:00(자정)까지</strong> 입력 가능합니다. 단, 비현업 공무원의 <strong>월 50시간 상한 규정은 종전과 동일하게 유지</strong>됩니다.
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <button onclick="toggleFaq('faq4')" class="w-full p-3.5 text-left font-bold text-slate-800 bg-slate-50/70 hover:bg-slate-100 flex items-center justify-between transition">
+            <span>Q4. 사전초과를 23시까지 신청해 놓고 21시에 일찍 퇴근하면 어떻게 되나요?</span>
+            <span id="faq4-icon" class="text-slate-400 transition-transform">▼</span>
+          </button>
+          <div id="faq4" class="hidden p-3.5 bg-white border-t border-slate-200 text-slate-600 text-xs leading-relaxed">
+            <strong>A. 남은 2시간(21~23시)에 대해 미기록 사유(조기퇴근 등)를 일일이 소명해야 상신 가능합니다.</strong><br>
+            인사랑 시스템은 사전신청한 전체 시간대에 대해 기록 또는 미기록 사유를 요구하므로, 사전신청을 무작정 넉넉하게 하지 마시고 <strong>실제 일할 예상 시각에 맞춰 신청하는 습관</strong>을 들이셔야 합니다. 반대로 21시까지만 신청하고 23시까지 일했더라도 사전명령 한도인 21시까지만 인정됩니다.
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <button onclick="toggleFaq('faq5')" class="w-full p-3.5 text-left font-bold text-slate-800 bg-slate-50/70 hover:bg-slate-100 flex items-center justify-between transition">
+            <span>Q5. 주말(휴일)에 출근해서 일할 때는 알림 팝업이 어떻게 뜨나요?</span>
+            <span id="faq5-icon" class="text-slate-400 transition-transform">▼</span>
+          </button>
+          <div id="faq5" class="hidden p-3.5 bg-white border-t border-slate-200 text-slate-600 text-xs leading-relaxed">
+            <strong>A. 주말에도 평일과 마찬가지로 09:00~18:00 사이에는 알림 팝업이 뜨지 않습니다.</strong><br>
+            휴일에도 알림 부하 방지를 위해 주간에는 팝업이 제공되지 않으므로, 메인 화면의 [근무기록]을 직접 클릭해 시간대별로 확인을 눌러주셔야 합니다.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- OVERTIME SIMULATOR MODAL (인사랑 공식 서식 + 커스텀 모드) -->
+  <div id="simModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div class="bg-white w-full max-w-5xl rounded-xl shadow-2xl border-2 border-[#1e3a8a] overflow-hidden my-auto max-h-[96vh] flex flex-col text-slate-900 text-xs sm:text-sm">
+      
+      <!-- InSarang Window Title Bar -->
+      <div class="px-4 py-2.5 bg-[#1e3a8a] text-white flex items-center justify-between select-none">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-3.5 h-3.5 bg-blue-300 rounded-xs"></span>
+          <h3 class="text-sm sm:text-base font-bold tracking-tight">근무기록조회 및 커스텀 시뮬레이터</h3>
+        </div>
+        <div class="flex items-center gap-2 text-xs">
+          <span class="text-blue-200 text-[11px] hidden sm:inline">실시간 시간 산정 엔진 & 오류 검증</span>
+          <button onclick="closeSimulator()" class="w-6 h-6 rounded hover:bg-red-600 text-white flex items-center justify-center text-sm font-bold transition">✕</button>
+        </div>
+      </div>
+
+      <!-- Mode & Preset Selection Bar -->
+      <div class="bg-[#f1f5f9] px-4 py-2 border-b border-slate-300 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div class="flex items-center gap-2 font-bold text-slate-800">
+          <span class="text-blue-700 font-black">|</span>
+          <span id="insarangTitleDate">2026년 10월 01일 광진구 청소과 김복무</span>
+          <span id="insarangRoleBadge" class="px-2 py-0.5 rounded text-[11px] font-bold bg-blue-600 text-white">비현업 모드</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-slate-500 font-medium">대상:</span>
+          <button id="simBtnOffice" onclick="switchSimRole('office')" class="px-2.5 py-1 rounded font-bold transition bg-blue-600 text-white shadow-xs">🏢 비현업</button>
+          <button id="simBtnField" onclick="switchSimRole('field')" class="px-2.5 py-1 rounded font-bold transition bg-slate-200 text-slate-700 hover:bg-slate-300">🛠️ 현업</button>
+          
+          <div class="h-4 w-px bg-slate-300 mx-1"></div>
+
+          <span class="text-slate-500 font-medium">프리셋/모드:</span>
+          <select id="presetSelector" onchange="applyPreset(this.value)" class="border border-slate-300 rounded p-1 bg-white text-xs font-semibold text-slate-700">
+            <option value="custom">⚙️ [직접 설정] 커스텀 모드 (자유 수정)</option>
+            <option value="default_office">📌 [비현업 기본] 06:40~22:30 지문 (식사 2h)</option>
+            <option value="default_field">📌 [현업 기본] 06:40~22:30 지문 (공제 없음)</option>
+            <option value="scenario_dinner_1h">💡 [1시간 식사] 18~21시 (제외시간 0분 가이드)</option>
+            <option value="scenario_limit_21">⚠️ [사전 21시] 23시 퇴근 지문 (21시 한도 컷)</option>
+            <option value="scenario_early_leave">⚠️ [조기퇴근] 사전 23시 신청 후 21시 퇴근</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Simulator Body Content -->
+      <div class="p-3 sm:p-5 overflow-y-auto space-y-3.5">
+        
+        <!-- SECTION 1: 초과근무내역 (User Inputs) -->
+        <div class="border border-slate-300 rounded-lg overflow-hidden bg-white shadow-xs">
+          <div class="bg-slate-100 px-3.5 py-2 font-bold text-slate-800 border-b border-slate-300 flex items-center justify-between text-xs sm:text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-blue-700 font-black">|</span>
+              <span>1. 초과근무 기본정보 입력 (시간을 변경해 보세요)</span>
+            </div>
+            <button onclick="openCoreRulesModal()" class="inline-flex items-center gap-1 text-[11px] text-amber-700 hover:text-amber-900 bg-amber-50 border border-amber-300 px-2 py-0.5 rounded font-bold transition">
+              <span class="w-3.5 h-3.5 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px]">?</span>
+              <span>사전신청 시간 주의사항</span>
+            </button>
+          </div>
+          <div class="p-3 grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs bg-slate-50/60">
+            <div>
+              <label class="block text-slate-600 font-bold mb-1">근무구분</label>
+              <select id="inputWorkType" onchange="onTimeRangeInputsChange()" class="w-full border border-slate-300 rounded p-1.5 bg-white text-xs font-semibold focus:border-blue-500">
+                <option value="일반">일반근무 (평일, 09~18 기본근무)</option>
+                <option value="휴일">휴일근무 (주말/공휴일)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-slate-600 font-bold mb-1">사전신청 시간 (시작~종료)</label>
+              <div class="flex items-center gap-1">
+                <input type="time" id="inputPreStart" value="06:00" onchange="onTimeRangeInputsChange()" class="w-1/2 border border-slate-300 rounded p-1 text-xs bg-white font-semibold">
+                <span>~</span>
+                <input type="time" id="inputPreEnd" value="23:00" onchange="onTimeRangeInputsChange()" class="w-1/2 border border-slate-300 rounded p-1 text-xs bg-white font-semibold">
+              </div>
+              <span id="calcPreMinutes" class="text-[10px] text-blue-600 block mt-0.5 font-semibold">순수 초과신청: 480분 (8시간)</span>
+            </div>
+            <div>
+              <label class="block text-slate-600 font-bold mb-1">실제 지문인식 (출근~퇴근)</label>
+              <div class="flex items-center gap-1">
+                <input type="time" id="inputFingerStart" value="06:40" onchange="onTimeRangeInputsChange()" class="w-1/2 border border-slate-300 rounded p-1 text-xs bg-white text-red-600 font-bold">
+                <span>~</span>
+                <input type="time" id="inputFingerEnd" value="22:30" onchange="onTimeRangeInputsChange()" class="w-1/2 border border-slate-300 rounded p-1 text-xs bg-white text-red-600 font-bold">
+              </div>
+              <span id="calcFingerMinutes" class="text-[10px] text-red-600 block mt-0.5 font-semibold">지문 체류시간: 410분 (6시간 50분)</span>
+            </div>
+            <div>
+              <label class="block text-slate-600 font-bold mb-1">근무한 일 (업무내역)</label>
+              <input type="text" id="inputTaskDesc" value="현안업무 처리" onchange="recalculateSimulator()" class="w-full border border-slate-300 rounded p-1.5 bg-white text-xs">
+              <span class="text-[10px] text-slate-400 block mt-0.5">*사전명령 결재 연동 항목</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: 초과근무제외시간 & 스마트 공제 가이드 -->
+        <div class="border border-slate-300 rounded-lg overflow-hidden bg-white shadow-xs">
+          <div class="bg-slate-100 px-3.5 py-2 font-bold text-slate-800 border-b border-slate-300 flex items-center justify-between text-xs sm:text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-blue-700 font-black">|</span>
+              <span>2. 초과근무제외시간 및 스마트 공제 안내</span>
+            </div>
+            <span class="text-[11px] text-purple-700 font-bold">기본공제 1시간 vs 근무제외시간 자동 판정</span>
+          </div>
+          <div class="p-3 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+            <div class="border border-slate-200 p-2.5 rounded bg-slate-50">
+              <div class="font-bold text-slate-700 mb-1 flex items-center justify-between">
+                <span>일과 전 근무제외시간</span>
+                <span id="labelPreExcludeMin" class="text-blue-600 font-bold">0분 제외</span>
+              </div>
+              <input type="text" id="exPreTime" value="00:00~00:00 (0분)" readonly class="w-full border border-slate-300 rounded p-1 bg-slate-100 text-slate-500 text-xs">
+            </div>
+            <div class="border border-slate-200 p-2.5 rounded bg-slate-50">
+              <div class="font-bold text-slate-700 mb-1 flex items-center justify-between">
+                <span>일과 후 총 식사·이석 시간</span>
+                <span id="labelPostMealTotal" class="text-slate-800 font-bold">0분 발생</span>
+              </div>
+              <input type="text" id="exPostTime" value="식사/이석 없음" readonly class="w-full border border-slate-300 rounded p-1 bg-slate-100 text-slate-700 text-xs">
+            </div>
+            <div class="border-2 border-purple-300 bg-purple-50 p-2.5 rounded">
+              <div class="font-bold text-purple-900 mb-1 flex items-center justify-between">
+                <span>💡 권장 인사랑 제외시간 입력값</span>
+                <span id="labelRecommendedExclude" class="text-purple-700 font-black text-sm">0분</span>
+              </div>
+              <p id="labelRecommendDesc" class="text-[11px] text-purple-800 leading-tight">
+                1시간 이내 식사는 기본공제 1시간으로 자동 차감되므로 제외시간 등록 불필요!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: 근무기록 (InSarang Exact Table with Error Checking) -->
+        <div class="border border-slate-300 rounded-lg overflow-hidden bg-white shadow-xs">
+          <div class="bg-slate-100 px-3.5 py-2 font-bold text-slate-800 border-b border-slate-300 flex items-center justify-between text-xs sm:text-sm">
+            <div class="flex items-center gap-1.5">
+              <span class="text-blue-700 font-black">|</span>
+              <span>3. 시간대별 근무기록 (수기로 기록 시각, 사유, 제외시간을 자유롭게 변경 가능)</span>
+            </div>
+            <span class="text-[11px] text-red-600 font-semibold">* 지문 출근 전 / 퇴근 후 비정상 기록 시 실시간 오류 경고</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead class="bg-slate-100/90 text-slate-700 border-b border-slate-300 font-bold text-[11px]">
+                <tr>
+                  <th class="p-2 border-r border-slate-200 w-24">근무시간</th>
+                  <th class="p-2 border-r border-slate-200 w-24">기록상태</th>
+                  <th class="p-2 border-r border-slate-200 w-24">기록시각(수기)</th>
+                  <th class="p-2 border-r border-slate-200">미기록 사유</th>
+                  <th class="p-2 border-r border-slate-200 w-24 text-center">식사/용무 구분</th>
+                  <th class="p-2 border-r border-slate-200 w-20 text-right">인정시간</th>
+                  <th class="p-2">판정 및 산출 근거 (오류 검증)</th>
+                </tr>
+              </thead>
+              <tbody id="insarangTableBody" class="divide-y divide-slate-200 text-slate-800">
+                <!-- Dynamically populated via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- SECTION 4: 실시간 판정 결과 대시보드 -->
+        <div class="bg-gradient-to-r from-slate-900 via-[#1e3a8a] to-slate-900 text-white p-4 rounded-xl shadow-md space-y-3">
+          <div class="flex flex-wrap items-center justify-between border-b border-blue-400/30 pb-2.5 gap-2">
+            <div class="text-xs font-bold text-blue-200 uppercase tracking-wider flex items-center gap-1.5">
+              <span>📊</span> 실시간 초과근무 수당 & 급량수(식비) 계산 결과
+            </div>
+            <div class="text-[11px] text-blue-200 font-semibold" id="dashRoleSummary">
+              비현업 모드 적용 중 (1일 초과 1시간 이상 시 기본 1시간 자동 공제)
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <!-- Card 1: Gross Recognized -->
+            <div class="bg-white/10 p-3 rounded-lg border border-white/10">
+              <span class="text-slate-300 text-xs block">총 실근무 인정시간 (합산)</span>
+              <div class="text-xl sm:text-2xl font-black text-white mt-1">
+                <span id="resTotalGrossMin">290</span>분 
+                <span class="text-xs font-normal text-blue-200">(<span id="resTotalGrossHour">4시간 50분</span>)</span>
+              </div>
+              <span class="text-[10px] text-slate-300 block mt-1">사전신청 및 지문 유효 구간 실근무</span>
+            </div>
+
+            <!-- Card 2: Net Recognized After Deduction -->
+            <div class="bg-white/10 p-3 rounded-lg border border-white/10">
+              <span class="text-slate-300 text-xs block" id="resDeductionTitle">기본 1시간(-60분) 공제 후 최종 수당</span>
+              <div class="text-xl sm:text-2xl font-black text-amber-300 mt-1">
+                <span id="resTotalNetMin">230</span>분 
+                <span class="text-xs font-normal text-amber-100">(<span id="resTotalNetHour">3시간 50분</span>)</span>
+              </div>
+              <span class="text-[10px] text-amber-200 block mt-1" id="resDeductionNote">평일 비현업 1시간 법정 기본공제 적용</span>
+            </div>
+
+            <!-- Card 3: Meal Allowance -->
+            <div class="bg-white/10 p-3 rounded-lg border border-white/10">
+              <span class="text-slate-300 text-xs block">급량수 (식비 지원)</span>
+              <div class="text-xl sm:text-2xl font-black text-emerald-300 mt-1 flex items-baseline gap-1.5">
+                <span id="resMealCount">2</span>식 인정
+                <span class="text-xs font-normal text-emerald-100" id="resMealDetail">(조식 1 + 석식 1)</span>
+              </div>
+              <span class="text-[10px] text-emerald-200 block mt-1">조식(09시 전 1h 이상) / 석식(18시 후 1h 이상)</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Explanation Bullets -->
+          <div class="pt-2 border-t border-blue-400/20 text-xs space-y-1 text-blue-100" id="resDetailedExplanations">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-4 py-2.5 bg-slate-100 border-t border-slate-300 flex flex-wrap items-center justify-between text-xs text-slate-600 gap-2">
+        <div class="flex items-center gap-1.5">
+          <span class="text-blue-700 font-bold">💡 실무 팁:</span>
+          <span>원하는 시간대를 직접 바꾸거나, 기록시각에 지문 전/후 시각을 넣어 에러 경고를 확인해 보세요.</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openCoreRulesModal()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded font-bold transition flex items-center gap-1 text-xs">
+            <span>📜</span> 실무 7대 원칙
+          </button>
+          <button onclick="closeSimulator()" class="px-4 py-1.5 bg-[#1e3a8a] hover:bg-blue-800 text-white rounded font-bold transition text-xs">
+            확인 및 닫기
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CORE RULES MODAL (7대 원칙 모달) -->
+  <div id="coreRulesModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-auto max-h-[90vh] flex flex-col">
+      <div class="px-6 py-4 bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-lg font-black">7</span>
+          <div>
+            <h3 class="text-base sm:text-lg font-bold">초과근무 실무 핵심 7대 원칙</h3>
+            <p class="text-xs text-blue-100">행정지원과 공식 안내 및 매뉴얼 총정리</p>
+          </div>
+        </div>
+        <button onclick="closeCoreRulesModal()" class="w-8 h-8 rounded-lg bg-black/20 hover:bg-black/40 text-white flex items-center justify-center transition font-bold">✕</button>
+      </div>
+
+      <div class="p-5 sm:p-6 space-y-3.5 text-xs sm:text-sm text-slate-800 overflow-y-auto">
+        <div class="p-3 rounded-xl border border-blue-200 bg-blue-50/60">
+          <div class="font-bold text-blue-900 mb-1">1. 사전초과 시 실제 초과근무 시간만 신청</div>
+          <p class="text-slate-700 leading-relaxed text-xs">
+            혹시 몰라 23시까지 넉넉히 신청 후 21시에 조기 퇴근하면, 남은 2시간에 대해 '근무하지 않음' 미기록 사유를 각각 소명해야 확인결재 상신이 가능합니다. 실제 예상 시간에 맞춰 신청하세요.
+          </p>
+        </div>
+
+        <div class="p-3 rounded-xl border border-amber-200 bg-amber-50/60">
+          <div class="font-bold text-amber-900 mb-1">2. 기본공제 1시간 내 식사는 제외시간 등록 불필요</div>
+          <p class="text-slate-700 leading-relaxed text-xs">
+            평일 비현업은 1시간이 자동 공제되므로, 18~19시 등 1시간 이내 식사는 어차피 공제됩니다. 따라서 미기록 사유에는 '식사'라고 적되, 상단 '근무제외시간' 탭에는 등록하지 않아도 됩니다.
+          </p>
+        </div>
+
+        <div class="p-3 rounded-xl border border-rose-200 bg-rose-50/60">
+          <div class="font-bold text-rose-900 mb-1">3. 기본공제 1시간 초과 식사 및 사적용무는 제외시간 필수 등록</div>
+          <p class="text-slate-700 leading-relaxed text-xs">
+            식사가 1시간을 초과(예: 1시간 30분, 2시간)하거나 외출, 사적 용무가 발생하면 1시간을 넘는 초과분과 용무 시간은 반드시 '근무제외시간'에 입력해야 감사 지적이나 결재 반려를 피할 수 있습니다.
+          </p>
+        </div>
+
+        <div class="p-3 rounded-xl border border-blue-200 bg-blue-50/60">
+          <div class="font-bold text-blue-900 mb-1">4. 10월 1일부터 초과근무 중 매시간 PC 근무기록 [확인] 클릭</div>
+          <p class="text-slate-700 leading-relaxed text-xs">
+            기본근무시간(09~18시)을 제외한 초과근무 시간대마다 1시간 단위로 확인을 눌러야 합니다. 매시 30~40분 사이에 팝업이 뜨며, 메인화면 [근무기록]에서 자율 클릭도 가능합니다.
+          </p>
+        </div>
+
+        <div class="p-3 rounded-xl border border-slate-200 bg-slate-50">
+          <div class="font-bold text-slate-900 mb-1">5. 초과 다음 날부터 본인 건별 상신 (당일 상신 불가)</div>
+          <p class="text-slate-700 leading-relaxed text-xs">
+            당일 확인결재 상신은 불가하며 익일 이후 가능합니다. 서무 일괄 상신이 아니므로 본인이 내역을 꼼꼼히 확인하고 결재권자에게 건별로 기안 상신합니다.
+          </p>
+        </div>
+
+        <div class="p-3 rounded-xl border border-emerald-200 bg-emerald-50/60">
+          <div class="font-bold text-emerald-900 mb-1">6. 1일 4시간 상한 폐지 (06:00~24:00 가능)</div>
+          <p class="text-slate-700 leading-relaxed text-xs">
+            1일 최대 4시간 상한이 폐지되어 새벽 6시부터 자정(24:00)까지 자유롭게 입력 가능합니다. 단, 비현업의 월 50시간 상한은 종전대로 유지됩니다.
+          </p>
+        </div>
+
+        <div class="p-3 rounded-xl border border-purple-200 bg-purple-50/60">
+          <div class="font-bold text-purple-900 mb-1">7. 급량비는 1시간 이상 근무 시 지급 (조식 09시 전 / 석식 18시 후)</div>
+          <p class="text-slate-700 leading-relaxed text-xs">
+            조식은 아침 09시 이전 1시간 이상 근무 시, 석식은 퇴근 후 18시 이후 1시간 이상 근무 시 각각 1식씩 인정됩니다. (2시간 이상이 아님)
+          </p>
+        </div>
+      </div>
+
+      <div class="px-6 py-3 bg-slate-100 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
+        <span>광진구 청소과 신기록 제작</span>
+        <button onclick="closeCoreRulesModal()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-bold transition">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white text-xs px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 transition-all duration-300 opacity-0 pointer-events-none transform translate-y-2">
+    <span>💡</span>
+    <span id="toastMsg">알림 메시지</span>
+  </div>
+
+  <!-- Page Footer -->
+  <footer class="max-w-5xl mx-auto px-4 sm:px-6 pt-6 pb-12 text-center text-xs text-slate-500 border-t border-slate-200 mt-10 space-y-1">
+    <p class="font-semibold text-slate-700">10월 1일 전면 시행 인사랑 초과근무 기록관리 제도개선 실무 가이드</p>
+    <p>기획 및 제작: <strong>광진구 청소과 신기록</strong> | 행정지원과 안내 및 인사랑 공식 매뉴얼 준용</p>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC ENGINE -->
+  <script>
+    // Tab Filter Logic: 전체 / 비현업 / 현업
+    function filterRole(role) {
+      const officeSec = document.getElementById('sectionOffice');
+      const fieldSec = document.getElementById('sectionField');
+      const btnAll = document.getElementById('tabBtnAll');
+      const btnOffice = document.getElementById('tabBtnOffice');
+      const btnField = document.getElementById('tabBtnField');
+
+      [btnAll, btnOffice, btnField].forEach(b => {
+        b.className = "w-1/3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900";
+      });
+
+      if (role === 'all') {
+        officeSec.classList.remove('hidden');
+        fieldSec.classList.remove('hidden');
+        btnAll.className = "w-1/3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all shadow-xs bg-white text-slate-900";
+      } else if (role === 'office') {
+        officeSec.classList.remove('hidden');
+        fieldSec.classList.add('hidden');
+        btnOffice.className = "w-1/3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all shadow-xs bg-blue-600 text-white";
+      } else if (role === 'field') {
+        officeSec.classList.add('hidden');
+        fieldSec.classList.remove('hidden');
+        btnField.className = "w-1/3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all shadow-xs bg-emerald-600 text-white";
+      }
+    }
+
+    // FAQ Accordion Toggle
+    function toggleFaq(id) {
+      const el = document.getElementById(id);
+      const icon = document.getElementById(id + '-icon');
+      if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        icon.style.transform = 'rotate(180deg)';
+      } else {
+        el.classList.add('hidden');
+        icon.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    // Helper: Convert "HH:MM" to minutes from 00:00
+    function timeToMins(tStr) {
+      if (!tStr) return 0;
+      const parts = tStr.split(':').map(Number);
+      return parts[0] * 60 + parts[1];
+    }
+
+    // Helper: Convert minutes to "X시간 Y분"
+    function minsToHourStr(min) {
+      const h = Math.floor(min / 60);
+      const m = min % 60;
+      if (h === 0) return `${m}분`;
+      if (m === 0) return `${h}시간`;
+      return `${h}시간 ${m}분`;
+    }
+
+    // Simulator State
+    let currentSimRole = 'office'; // 'office' or 'field'
+    let simRows = []; // dynamically generated hourly rows
+
+    // Build dynamic hourly rows
+    function buildHourlyBlocks(startH, endH, workType) {
+      const rows = [];
+      for (let h = startH; h < endH; h++) {
+        // Skip standard weekday 09:00~18:00
+        if (workType === '일반' && h >= 9 && h < 18) continue;
+
+        const timeLabel = `${String(h).padStart(2, '0')}:00~${String(h + 1).padStart(2, '0')}:00`;
+        rows.push({
+          startHour: h,
+          endHour: h + 1,
+          time: timeLabel,
+          status: '확인',
+          timeRecord: `${String(h).padStart(2, '0')}:05`,
+          reason: '',
+          excludeType: 'none', // 'none', 'meal', 'personal'
+          excludeMinutes: 0
+        });
+      }
+      return rows;
+    }
+
+    // Open Simulator Modal
+    function openSimulator(role, presetKey) {
+      currentSimRole = role;
+      document.getElementById('simModal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+      
+      const presetSel = document.getElementById('presetSelector');
+      if (presetKey) {
+        presetSel.value = presetKey;
+        applyPreset(presetKey);
+      } else {
+        if (role === 'field') {
+          presetSel.value = 'default_field';
+          applyPreset('default_field');
+        } else {
+          presetSel.value = 'default_office';
+          applyPreset('default_office');
+        }
+      }
+    }
+
+    function closeSimulator() {
+      document.getElementById('simModal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    function switchSimRole(role) {
+      currentSimRole = role;
+      const presetSel = document.getElementById('presetSelector');
+      if (role === 'field') {
+        presetSel.value = 'default_field';
+        applyPreset('default_field');
+      } else {
+        presetSel.value = 'default_office';
+        applyPreset('default_office');
+      }
+    }
+
+    // Apply Presets
+    function applyPreset(presetKey) {
+      const workTypeInput = document.getElementById('inputWorkType');
+      const preStartInput = document.getElementById('inputPreStart');
+      const preEndInput = document.getElementById('inputPreEnd');
+      const fingerStartInput = document.getElementById('inputFingerStart');
+      const fingerEndInput = document.getElementById('inputFingerEnd');
+      const taskDescInput = document.getElementById('inputTaskDesc');
+
+      if (presetKey === 'custom') {
+        // Keeps user values and enables total customization
+        showToast('커스텀 모드 활성화: 모든 시간과 설정을 직접 지정해 보세요.');
+        recalculateSimulator();
+        return;
+      }
+
+      if (presetKey === 'default_office') {
+        currentSimRole = 'office';
+        workTypeInput.value = '일반';
+        preStartInput.value = '06:00';
+        preEndInput.value = '23:00';
+        fingerStartInput.value = '06:40';
+        fingerEndInput.value = '22:30';
+        taskDescInput.value = '현안업무 처리';
+
+        simRows = [
+          { startHour: 6, endHour: 7, time: '06:00~07:00', status: '확인', timeRecord: '06:55', reason: '', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 7, endHour: 8, time: '07:00~08:00', status: '확인', timeRecord: '07:05', reason: '', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 8, endHour: 9, time: '08:00~09:00', status: '확인', timeRecord: '08:40', reason: '', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 18, endHour: 19, time: '18:00~19:00', status: '확인', timeRecord: '18:02', reason: '', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 19, endHour: 20, time: '19:00~20:00', status: '미기록', timeRecord: '-', reason: '식사', excludeType: 'meal', excludeMinutes: 60 },
+          { startHour: 20, endHour: 21, time: '20:00~21:00', status: '미기록', timeRecord: '-', reason: '식사', excludeType: 'meal', excludeMinutes: 60 },
+          { startHour: 21, endHour: 22, time: '21:00~22:00', status: '확인', timeRecord: '21:58', reason: '', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 22, endHour: 23, time: '22:00~23:00', status: '확인', timeRecord: '22:05', reason: '', excludeType: 'none', excludeMinutes: 0 }
+        ];
+      } else if (presetKey === 'default_field') {
+        currentSimRole = 'field';
+        workTypeInput.value = '일반';
+        preStartInput.value = '06:00';
+        preEndInput.value = '23:00';
+        fingerStartInput.value = '06:40';
+        fingerEndInput.value = '22:30';
+        taskDescInput.value = '현업 현장업무 처리';
+
+        simRows = [
+          { startHour: 6, endHour: 7, time: '06:00~07:00', status: '미기록', timeRecord: '-', reason: '현업 현장업무 처리', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 7, endHour: 8, time: '07:00~08:00', status: '미기록', timeRecord: '-', reason: '현업 현장업무 처리', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 8, endHour: 9, time: '08:00~09:00', status: '미기록', timeRecord: '-', reason: '현업 현장업무 처리', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 18, endHour: 19, time: '18:00~19:00', status: '미기록', timeRecord: '-', reason: '현업 현장업무 처리', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 19, endHour: 20, time: '19:00~20:00', status: '미기록', timeRecord: '-', reason: '현업 현장업무 처리', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 20, endHour: 21, time: '20:00~21:00', status: '미기록', timeRecord: '-', reason: '현업 현장업무 처리', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 21, endHour: 22, time: '21:00~22:00', status: '미기록', timeRecord: '-', reason: '현업 현장업무 처리', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 22, endHour: 23, time: '22:00~23:00', status: '미기록', timeRecord: '-', reason: '현업 현장업무 처리', excludeType: 'none', excludeMinutes: 0 }
+        ];
+      } else if (presetKey === 'scenario_dinner_1h') {
+        currentSimRole = 'office';
+        workTypeInput.value = '일반';
+        preStartInput.value = '18:00';
+        preEndInput.value = '21:00';
+        fingerStartInput.value = '18:00';
+        fingerEndInput.value = '21:00';
+        taskDescInput.value = '현안업무 처리';
+
+        simRows = [
+          { startHour: 18, endHour: 19, time: '18:00~19:00', status: '미기록', timeRecord: '-', reason: '식사', excludeType: 'meal', excludeMinutes: 60 },
+          { startHour: 19, endHour: 20, time: '19:00~20:00', status: '확인', timeRecord: '19:05', reason: '', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 20, endHour: 21, time: '20:00~21:00', status: '확인', timeRecord: '20:05', reason: '', excludeType: 'none', excludeMinutes: 0 }
+        ];
+      } else if (presetKey === 'scenario_limit_21') {
+        currentSimRole = 'office';
+        workTypeInput.value = '일반';
+        preStartInput.value = '18:00';
+        preEndInput.value = '21:00';
+        fingerStartInput.value = '18:00';
+        fingerEndInput.value = '23:00';
+        taskDescInput.value = '현안업무 처리';
+
+        simRows = [
+          { startHour: 18, endHour: 19, time: '18:00~19:00', status: '확인', timeRecord: '18:05', reason: '', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 19, endHour: 20, time: '19:00~20:00', status: '확인', timeRecord: '19:05', reason: '', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 20, endHour: 21, time: '20:00~21:00', status: '확인', timeRecord: '20:05', reason: '', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 21, endHour: 22, time: '21:00~22:00', status: '확인', timeRecord: '21:05', reason: '', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 22, endHour: 23, time: '22:00~23:00', status: '확인', timeRecord: '22:05', reason: '', excludeType: 'none', excludeMinutes: 0 }
+        ];
+      } else if (presetKey === 'scenario_early_leave') {
+        currentSimRole = 'office';
+        workTypeInput.value = '일반';
+        preStartInput.value = '18:00';
+        preEndInput.value = '23:00';
+        fingerStartInput.value = '18:00';
+        fingerEndInput.value = '21:00';
+        taskDescInput.value = '현안업무 처리';
+
+        simRows = [
+          { startHour: 18, endHour: 19, time: '18:00~19:00', status: '확인', timeRecord: '18:05', reason: '', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 19, endHour: 20, time: '19:00~20:00', status: '확인', timeRecord: '19:05', reason: '', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 20, endHour: 21, time: '20:00~21:00', status: '확인', timeRecord: '20:05', reason: '', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 21, endHour: 22, time: '21:00~22:00', status: '미기록', timeRecord: '-', reason: '조기 퇴근으로 미근무', excludeType: 'none', excludeMinutes: 0 },
+          { startHour: 22, endHour: 23, time: '22:00~23:00', status: '미기록', timeRecord: '-', reason: '조기 퇴근으로 미근무', excludeType: 'none', excludeMinutes: 0 }
+        ];
+      }
+
+      recalculateSimulator();
+      showToast('시나리오가 적용되었습니다.');
+    }
+
+    // Called when user modifies the Time inputs
+    function onTimeRangeInputsChange() {
+      const preStartMin = timeToMins(document.getElementById('inputPreStart').value);
+      const preEndMin = timeToMins(document.getElementById('inputPreEnd').value);
+      const fingerStartMin = timeToMins(document.getElementById('inputFingerStart').value);
+      const fingerEndMin = timeToMins(document.getElementById('inputFingerEnd').value);
+      const workType = document.getElementById('inputWorkType').value;
+
+      const minHour = Math.min(Math.floor(preStartMin / 60), Math.floor(fingerStartMin / 60));
+      const maxHour = Math.max(Math.ceil(preEndMin / 60), Math.ceil(fingerEndMin / 60));
+
+      simRows = buildHourlyBlocks(minHour, maxHour, workType);
+
+      if (currentSimRole === 'field') {
+        simRows.forEach(r => {
+          r.status = '미기록';
+          r.timeRecord = '-';
+          r.reason = '현업 현장업무 처리';
+          r.excludeType = 'none';
+          r.excludeMinutes = 0;
+        });
+      }
+
+      document.getElementById('presetSelector').value = 'custom';
+      recalculateSimulator();
+    }
+
+    // Core Calculation & Render Engine
+    function recalculateSimulator() {
+      const isOffice = currentSimRole === 'office';
+
+      // Header Badges & Tab styles
+      const btnOffice = document.getElementById('simBtnOffice');
+      const btnField = document.getElementById('simBtnField');
+      const roleBadge = document.getElementById('insarangRoleBadge');
+
+      if (isOffice) {
+        btnOffice.className = "px-2.5 py-1 rounded font-bold transition bg-blue-600 text-white shadow-xs";
+        btnField.className = "px-2.5 py-1 rounded font-bold transition bg-slate-200 text-slate-700 hover:bg-slate-300";
+        roleBadge.className = "px-2 py-0.5 rounded text-[11px] font-bold bg-blue-600 text-white";
+        roleBadge.innerText = "🏢 비현업 모드 (평일 1시간 공제)";
+      } else {
+        btnOffice.className = "px-2.5 py-1 rounded font-bold transition bg-slate-200 text-slate-700 hover:bg-slate-300";
+        btnField.className = "px-2.5 py-1 rounded font-bold transition bg-emerald-600 text-white shadow-xs";
+        roleBadge.className = "px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-600 text-white";
+        roleBadge.innerText = "🛠️ 현업 모드 (공제 없음)";
+      }
+
+      // Read Time Inputs
+      const preStartStr = document.getElementById('inputPreStart').value;
+      const preEndStr = document.getElementById('inputPreEnd').value;
+      const fingerStartStr = document.getElementById('inputFingerStart').value;
+      const fingerEndStr = document.getElementById('inputFingerEnd').value;
+      const workType = document.getElementById('inputWorkType').value;
+
+      const preStartMin = timeToMins(preStartStr);
+      const preEndMin = timeToMins(preEndStr);
+      const fingerStartMin = timeToMins(fingerStartStr);
+      const fingerEndMin = timeToMins(fingerEndStr);
+
+      // Pre-applied minutes calculation
+      let preOvertimeMin = 0;
+      if (workType === '일반') {
+        const morning = Math.max(0, Math.min(preEndMin, 9 * 60) - preStartMin);
+        const evening = Math.max(0, preEndMin - Math.max(preStartMin, 18 * 60));
+        preOvertimeMin = morning + evening;
+      } else {
+        preOvertimeMin = Math.max(0, preEndMin - preStartMin);
+      }
+      document.getElementById('calcPreMinutes').innerText = `순수 초과신청: ${preOvertimeMin}분 (${minsToHourStr(preOvertimeMin)})`;
+
+      const fingerTotalMin = Math.max(0, fingerEndMin - fingerStartMin);
+      document.getElementById('calcFingerMinutes').innerText = `지문 체류시간: ${fingerTotalMin}분 (${minsToHourStr(fingerTotalMin)})`;
+
+      // Render Table Rows
+      const tbody = document.getElementById('insarangTableBody');
+      tbody.innerHTML = '';
+
+      let totalGrossRecognizedMin = 0;
+      let totalMealMins = 0;
+      let totalPersonalMins = 0;
+      let dynamicNotes = [];
+
+      simRows.forEach((row, idx) => {
+        const blockStartMin = row.startHour * 60;
+        const blockEndMin = row.endHour * 60;
+
+        // Effective overlap range: block, pre-application, and fingerprint
+        const effectiveStart = Math.max(blockStartMin, preStartMin, fingerStartMin);
+        const effectiveEnd = Math.min(blockEndMin, preEndMin, fingerEndMin);
+
+        let blockMinutes = 0;
+        let reasonNote = '';
+        let hasError = false;
+
+        // Validation 1: Record time check against fingerprint
+        if (row.status === '확인' && row.timeRecord !== '-') {
+          const recMin = timeToMins(row.timeRecord);
+          if (recMin < fingerStartMin) {
+            hasError = true;
+            reasonNote = `🚨 오류: 출근 지문(${fingerStartStr}) 이전 시각에 기록됨! (허위 입력 간주 가능)`;
+          } else if (recMin > fingerEndMin) {
+            hasError = true;
+            reasonNote = `🚨 오류: 퇴근 지문(${fingerEndStr}) 이후 시각에 기록됨!`;
+          } else if (recMin < blockStartMin || recMin >= blockEndMin) {
+            hasError = true;
+            reasonNote = `⚠️ 주의: 기록시각이 해당 시간대(${row.time})를 벗어남`;
+          }
+        }
+
+        // Exclusion handling
+        if (row.excludeType === 'meal') {
+          totalMealMins += 60;
+          blockMinutes = 0;
+          if (!hasError) reasonNote = `식사 시간으로 등록 (기본공제 및 제외시간 연동)`;
+        } else if (row.excludeType === 'personal') {
+          totalPersonalMins += 60;
+          blockMinutes = 0;
+          if (!hasError) reasonNote = `개인용무/외출 시간으로 등록 (필수 제외)`;
+        } else if (effectiveEnd <= effectiveStart) {
+          blockMinutes = 0;
+          if (!hasError) {
+            if (blockEndMin <= fingerStartMin) {
+              reasonNote = `출근 지문(${fingerStartStr}) 이전 시간으로 0분 불인정`;
+            } else if (blockStartMin >= fingerEndMin) {
+              reasonNote = `퇴근 지문(${fingerEndStr}) 이후 시간으로 0분 불인정`;
+            } else if (blockStartMin >= preEndMin) {
+              reasonNote = `사전신청 종료(${preEndStr}) 초과로 0분 불인정 (사전명령 한도)`;
+              dynamicNotes.push(`사전신청 종료(${preEndStr}) 이후의 지문 체류는 사전명령 한도 초과로 자동 0분 처리되었습니다.`);
+            } else {
+              reasonNote = `사전신청/지문 유효 구간 밖으로 0분 처리`;
+            }
+          }
+        } else {
+          blockMinutes = effectiveEnd - effectiveStart;
+          if (!hasError) {
+            if (blockMinutes === 60) {
+              reasonNote = isOffice 
+                ? (row.status === '확인' ? `정상 실시간 확인 (${row.timeRecord}) 60분 인정` : `미기록 사유('${row.reason || '업무'}') 승인 시 60분 인정`)
+                : `현업 현장업무 사유('${row.reason || '현업'}')로 60분 인정`;
+            } else {
+              if (effectiveStart === fingerStartMin) {
+                reasonNote = `출근 지문(${fingerStartStr})에 의해 ${blockMinutes}분만 유효 인정`;
+              } else if (effectiveEnd === fingerEndMin) {
+                reasonNote = `퇴근 지문(${fingerEndStr})에 의해 ${blockMinutes}분만 유효 인정`;
+              } else {
+                reasonNote = `유효 구간만 부분 인정 (${blockMinutes}분)`;
+              }
+            }
+          }
+        }
+
+        totalGrossRecognizedMin += blockMinutes;
+
+        // Create table row element
+        const tr = document.createElement('tr');
+        tr.className = `hover:bg-slate-50 transition border-b border-slate-200 ${hasError ? 'bg-red-50/60' : ''}`;
+        tr.innerHTML = `
+          <td class="p-2 border-r border-slate-200 font-bold text-slate-800">${row.time}</td>
+          <td class="p-2 border-r border-slate-200">
+            <select onchange="updateRowStatus(${idx}, this.value)" class="w-full text-xs font-bold border border-slate-300 rounded p-1 ${row.status === '확인' ? 'bg-blue-50 text-blue-700' : 'bg-amber-50 text-amber-800'}">
+              <option value="확인" ${row.status === '확인' ? 'selected' : ''}>확인</option>
+              <option value="미기록" ${row.status === '미기록' ? 'selected' : ''}>미기록</option>
+            </select>
+          </td>
+          <td class="p-2 border-r border-slate-200">
+            <input type="text" value="${row.timeRecord}" onchange="updateRowTime(${idx}, this.value)" class="w-full text-xs p-1 border ${hasError ? 'border-red-500 font-bold text-red-600' : 'border-slate-300'} rounded bg-white text-slate-700">
+          </td>
+          <td class="p-2 border-r border-slate-200">
+            <input type="text" value="${row.reason}" placeholder="미기록 사유 입력" onchange="updateRowReason(${idx}, this.value)" class="w-full text-xs p-1 border border-slate-300 rounded bg-white text-slate-800">
+          </td>
+          <td class="p-2 border-r border-slate-200 text-center">
+            <select onchange="updateRowExcludeType(${idx}, this.value)" class="w-full text-xs border border-slate-300 rounded p-1 font-semibold ${row.excludeType !== 'none' ? 'bg-purple-50 text-purple-700 font-bold' : ''}">
+              <option value="none" ${row.excludeType === 'none' ? 'selected' : ''}>근무(기본)</option>
+              <option value="meal" ${row.excludeType === 'meal' ? 'selected' : ''}>식사(60분)</option>
+              <option value="personal" ${row.excludeType === 'personal' ? 'selected' : ''}>개인용무(60분)</option>
+            </select>
+          </td>
+          <td class="p-2 border-r border-slate-200 text-right font-bold ${blockMinutes > 0 ? (isOffice ? 'text-blue-700' : 'text-emerald-700') : 'text-slate-400'}">
+            ${blockMinutes}분
+          </td>
+          <td class="p-2 text-xs ${hasError ? 'text-red-700 font-bold' : 'text-slate-600'} leading-tight">
+            ${reasonNote}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Exclusion & Deduction Guide Logic (행정지원과 가이드 핵심)
+      // Rule: For non-field weekday overtime, 60 mins is automatically deducted as statutory basic deduction.
+      // If meal <= 60 mins: recommended input to InSarang Exclusion Tab is 0 mins!
+      // If meal > 60 mins: excess (meal - 60) + personalMins MUST be entered!
+      let recommendedExcludeMins = 0;
+      let recommendDesc = "";
+
+      if (isOffice) {
+        if (workType === '일반') {
+          const excessMeal = Math.max(0, totalMealMins - 60);
+          recommendedExcludeMins = excessMeal + totalPersonalMins;
+
+          if (totalMealMins === 60 && totalPersonalMins === 0) {
+            recommendDesc = "식사 1시간은 법정 기본공제(1시간)로 자동 차감되므로 '근무제외시간' 탭에 등록 불필요 (0분 입력 권장)!";
+          } else if (totalMealMins > 60) {
+            recommendDesc = `식사 총 ${totalMealMins}분 중 기본공제 60분을 초과한 ${excessMeal}분 + 개인용무 ${totalPersonalMins}분 = 총 ${recommendedExcludeMins}분을 인사랑 제외시간 탭에 등록 필수!`;
+          } else if (totalPersonalMins > 0) {
+            recommendDesc = `개인용무/외출 ${totalPersonalMins}분은 기본공제와 별개로 반드시 인사랑 제외시간 탭에 등록 필수!`;
+          } else {
+            recommendDesc = "제외할 식사나 개인용무가 없습니다 (0분 입력).";
+          }
+        } else {
+          // Holiday
+          recommendedExcludeMins = totalMealMins + totalPersonalMins;
+          recommendDesc = `휴일 근무 시 식사/용무 ${recommendedExcludeMins}분을 인사랑 제외시간 탭에 등록하세요.`;
+        }
+      } else {
+        // Field
+        recommendedExcludeMins = totalMealMins + totalPersonalMins;
+        recommendDesc = "현업 공무원은 기본공제가 없으므로, 발생한 식사/용무 시간 전액을 제외시간에 등록합니다.";
+      }
+
+      document.getElementById('labelPostMealTotal').innerText = `${totalMealMins + totalPersonalMins}분 발생 (식사 ${totalMealMins}m, 용무 ${totalPersonalMins}m)`;
+      document.getElementById('exPostTime').value = (totalMealMins + totalPersonalMins > 0) ? `식사 ${totalMealMins}분 + 개인용무 ${totalPersonalMins}분` : '제외시간 없음';
+      document.getElementById('labelRecommendedExclude').innerText = `${recommendedExcludeMins}분 (${minsToHourStr(recommendedExcludeMins)})`;
+      document.getElementById('labelRecommendDesc').innerText = recommendDesc;
+
+      // Net recognized calculation
+      let totalNetMin = totalGrossRecognizedMin;
+      if (isOffice && workType === '일반') {
+        if (totalGrossRecognizedMin >= 60) {
+          totalNetMin = totalGrossRecognizedMin - 60;
+        } else {
+          totalNetMin = 0;
+        }
+      }
+
+      // Meal Allowance (급량수) Rule:
+      // Breakfast: 1 hour or more work BEFORE 09:00 AM!
+      // Dinner: 1 hour or more work AFTER 18:00 PM!
+      let mealCount = 0;
+      let mealNotes = [];
+
+      // Check morning work before 09:00
+      let morningWorkMins = 0;
+      simRows.forEach(r => {
+        if (r.endHour <= 9 && r.excludeType === 'none') {
+          const bStart = Math.max(r.startHour * 60, preStartMin, fingerStartMin);
+          const bEnd = Math.min(r.endHour * 60, preEndMin, fingerEndMin);
+          if (bEnd > bStart) morningWorkMins += (bEnd - bStart);
+        }
+      });
+      if (morningWorkMins >= 60) {
+        mealCount++;
+        mealNotes.push('조식 1식(09시 전 1h↑)');
+      }
+
+      // Check evening work after 18:00
+      let eveningWorkMins = 0;
+      simRows.forEach(r => {
+        if (r.startHour >= 18 && r.excludeType === 'none') {
+          const bStart = Math.max(r.startHour * 60, preStartMin, fingerStartMin);
+          const bEnd = Math.min(r.endHour * 60, preEndMin, fingerEndMin);
+          if (bEnd > bStart) eveningWorkMins += (bEnd - bStart);
+        }
+      });
+      if (eveningWorkMins >= 60) {
+        mealCount++;
+        mealNotes.push('석식 1식(18시 후 1h↑)');
+      }
+
+      // Update Dashboard UI Elements
+      document.getElementById('resTotalGrossMin').innerText = totalGrossRecognizedMin;
+      document.getElementById('resTotalGrossHour').innerText = minsToHourStr(totalGrossRecognizedMin);
+      document.getElementById('resTotalNetMin').innerText = totalNetMin;
+      document.getElementById('resTotalNetHour').innerText = minsToHourStr(totalNetMin);
+      document.getElementById('resMealCount').innerText = mealCount;
+      document.getElementById('resMealDetail').innerText = mealNotes.length > 0 ? `(${mealNotes.join(' + ')})` : '(지급 요건 미충족)';
+
+      const deductionTitle = document.getElementById('resDeductionTitle');
+      const deductionNote = document.getElementById('resDeductionNote');
+      const dashSummary = document.getElementById('dashRoleSummary');
+      const explainDiv = document.getElementById('resDetailedExplanations');
+
+      if (isOffice) {
+        deductionTitle.innerText = "기본 1시간(-60분) 공제 후 최종 수당";
+        deductionNote.innerText = "평일 비현업 1시간 기본공제 적용 (-60분 차감)";
+        dashSummary.innerText = "🏢 비현업 모드 (평일 1일 초과 1시간 이상 시 기본 1시간 자동 공제)";
+
+        explainDiv.innerHTML = `
+          <div class="flex items-start gap-1.5">
+            <span class="text-blue-300 font-bold">1. 실근무 인정:</span>
+            <span>지문 및 사전신청 유효 구간 합산 <strong>총 ${totalGrossRecognizedMin}분(${minsToHourStr(totalGrossRecognizedMin)})</strong> 실근무 인정.</span>
+          </div>
+          <div class="flex items-start gap-1.5">
+            <span class="text-purple-300 font-bold">2. 식사 및 제외시간:</span>
+            <span>${recommendDesc}</span>
+          </div>
+          <div class="flex items-start gap-1.5">
+            <span class="text-emerald-300 font-bold">3. 보수규정 1시간 기본 공제:</span>
+            <span>실근무 합산에서 법정 1시간(60분)이 공제되어 <strong>최종 ${totalNetMin}분(${minsToHourStr(totalNetMin)})</strong> 수당 인정.</span>
+          </div>
+        `;
+      } else {
+        deductionTitle.innerText = "현업 1시간 공제 면제 (전액 수당 인정)";
+        deductionNote.innerText = "현업 공무원은 기본 1시간 공제가 면제됩니다.";
+        dashSummary.innerText = "🛠️ 현업 모드 (기본 1시간 공제 없음, 지문 체류 실근무 전액 수당 인정)";
+
+        explainDiv.innerHTML = `
+          <div class="flex items-start gap-1.5">
+            <span class="text-emerald-300 font-bold">1. 1시간 공제 면제 (전액 인정):</span>
+            <span>현업 공무원은 기본 1시간 공제가 없으므로, 지문 기준 실근무 <strong>총 ${totalNetMin}분(${minsToHourStr(totalNetMin)}) 전액</strong>이 수당 시간으로 인정됩니다.</span>
+          </div>
+          <div class="flex items-start gap-1.5">
+            <span class="text-blue-300 font-bold">2. 과도기 전산 오류 시 소명:</span>
+            <span>실시간 PC 입력이 불필요하므로, 익일 '현업 현장업무 처리' 사유를 적고 본인이 직접 과장님께 건별 상신합니다.</span>
+          </div>
+        `;
+      }
+
+      // Cutoff warnings
+      if (dynamicNotes.length > 0) {
+        const uniqueNotes = Array.from(new Set(dynamicNotes));
+        uniqueNotes.forEach(note => {
+          const div = document.createElement('div');
+          div.className = "flex items-start gap-1.5 text-amber-200";
+          div.innerHTML = `<span class="font-bold">⚠️ 커트라인 안내:</span><span>${note}</span>`;
+          explainDiv.appendChild(div);
+        });
+      }
+    }
+
+    // Row Update Functions
+    function updateRowStatus(idx, val) {
+      simRows[idx].status = val;
+      if (val === '확인' && simRows[idx].timeRecord === '-') {
+        simRows[idx].timeRecord = `${String(simRows[idx].startHour).padStart(2, '0')}:05`;
+      }
+      recalculateSimulator();
+    }
+
+    function updateRowTime(idx, val) {
+      simRows[idx].timeRecord = val;
+      recalculateSimulator();
+    }
+
+    function updateRowReason(idx, val) {
+      simRows[idx].reason = val;
+      recalculateSimulator();
+    }
+
+    function updateRowExcludeType(idx, val) {
+      simRows[idx].excludeType = val;
+      if (val === 'meal') {
+        simRows[idx].status = '미기록';
+        simRows[idx].reason = '식사';
+      } else if (val === 'personal') {
+        simRows[idx].status = '미기록';
+        simRows[idx].reason = '개인용무';
+      }
+      recalculateSimulator();
+    }
+
+    // Core Rules Modal
+    function openCoreRulesModal() {
+      document.getElementById('coreRulesModal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeCoreRulesModal() {
+      document.getElementById('coreRulesModal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // Link Sharing via execCommand (iFrame safe)
+    function shareLink() {
+      const dummy = document.createElement('input');
+      const text = window.location.href;
+      document.body.appendChild(dummy);
+      dummy.value = text;
+      dummy.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummy);
+
+      showToast('가이드 링크가 복사되었습니다. 단톡방/메신저에 공유하세요!');
+    }
+
+    // Toast Notification
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      if (!toast || !toastMsg) return;
+      
+      toastMsg.innerText = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-2');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-2');
+      }, 2500);
+    }
+
+    // Keydown ESC listener
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeSimulator();
+        closeCoreRulesModal();
+      }
+    });
+
+    // Initialize Default State
+    window.addEventListener('load', function() {
+      applyPreset('default_office');
+    });
+  </script>
+</body>
+</html>
